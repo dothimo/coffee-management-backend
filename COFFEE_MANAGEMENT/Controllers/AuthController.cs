@@ -94,28 +94,5 @@ namespace COFFEE_MANAGEMENT_API.Controllers
 
             return Ok(response);
         }
-
-        //[Authorize]
-        //[HttpPut("ChangePassword")]
-        //public async Task<IActionResult> ChangePassword(ChangePasswordMV changePasswordMV)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var identityResult = await _userManager.ChangePasswordAsync(
-        //        ApplicationUser,
-        //        changePasswordMV.OldPassword,
-        //        changePasswordMV.NewPassword
-        //    );
-
-        //    if (!identityResult.Succeeded)
-        //    {
-        //        return BadRequest(identityResult.Errors);
-        //    }
-
-        //    return Ok(ApplicationUser);
-        //}
     }
 }

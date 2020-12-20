@@ -42,8 +42,6 @@ namespace COFFEE_MANAGEMENT_API
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddCors();
-
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
@@ -60,22 +58,13 @@ namespace COFFEE_MANAGEMENT_API
 
                     };
                 });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-            });
             //services.AddScoped(typeof(DepartmentService));
             //services.AddScoped(typeof(DepartmentStaffService));
-
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors();

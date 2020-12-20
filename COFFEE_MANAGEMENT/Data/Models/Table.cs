@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace COFFEE_MANAGEMENT_API.Data.Models
 {
-    public class Ban
+    public class Table
     {
         public long Id { get; set; }
         [Required]
-        public string TenBan { get; set; }
+        public string Name  { get; set; }
 
         [Required]
-        public bool TrangThai { get; set; }
+        public bool Status { get; set; }
     }
 }

@@ -14,9 +14,12 @@ namespace COFFEE_MANAGEMENT_API.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+        public virtual DbSet<Bill> Bills { get; set; }
+        public virtual DbSet<Table> Tables { get; set; }
+        public virtual DbSet<ProductCategory> ProductCategory { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Ban> Bans { get; set; }
-        public virtual DbSet<HoaDon> HoaDons { get; set; }
-
+        public virtual DbSet<Staff> Staffs { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<SalesDetails> SalesDetailss { get; set; }
     }
 }

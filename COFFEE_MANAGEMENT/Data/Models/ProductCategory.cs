@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace COFFEE_MANAGEMENT_API.Data.Models
 {
-    public class  HoaDon
+    public class ProductCategory
     {
         public long Id { get; set; }
-
         [Required]
-        public long BanId { get; set; }
-        public virtual Ban Ban { get; set; }
+        public long Name { get; set; }
     }
 }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace COFFEE_MANAGEMENT_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201219075957_createTableHoaDonss")]
-    partial class createTableHoaDonss
+    [Migration("20201220093207_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -86,38 +86,64 @@ namespace COFFEE_MANAGEMENT_API.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Ban", b =>
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Bill", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<string>("TenBan")
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Point")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StaffId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TableId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TotalMoney")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("StaffId");
+
+                    b.HasIndex("TableId");
+
+                    b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Customer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<bool>("TrangThai")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Bans");
-                });
-
-            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.HoaDon", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("BanId")
+                    b.Property<long>("Point")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BanId");
-
-                    b.ToTable("HoaDons");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Product", b =>
@@ -126,9 +152,96 @@ namespace COFFEE_MANAGEMENT_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<decimal>("Pirice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<long>("ProductCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SalesDetailsId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductCategoryId");
+
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.ProductCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Name")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductCategory");
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.SalesDetails", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<long>("BillId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Quality")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("SalesDetailss");
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Staff", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Staffs");
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Table", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tables");
                 });
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -345,11 +458,41 @@ namespace COFFEE_MANAGEMENT_API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.HoaDon", b =>
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Bill", b =>
                 {
-                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.Ban", "Ban")
+                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("BanId")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.Table", "Table")
+                        .WithMany()
+                        .HasForeignKey("TableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.Product", b =>
+                {
+                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.ProductCategory", "ProductCategory")
+                        .WithMany()
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("COFFEE_MANAGEMENT_API.Data.Models.SalesDetails", b =>
+                {
+                    b.HasOne("COFFEE_MANAGEMENT_API.Data.Models.Product", null)
+                        .WithOne("SalesDetails")
+                        .HasForeignKey("COFFEE_MANAGEMENT_API.Data.Models.SalesDetails", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
