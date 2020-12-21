@@ -18,8 +18,5 @@ namespace COFFEE_MANAGEMENT_API.Data.Models
 
         [Required]
         public decimal Pirice { get; set; }
-
-        public long SalesDetailsId { get; set; }
-        public virtual SalesDetails SalesDetails { get; set; }
     }
 }

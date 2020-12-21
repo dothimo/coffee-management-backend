@@ -17,60 +17,70 @@ namespace COFFEE_MANAGEMENT_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductController : ControllerBase
+    public class ProductCategorysController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
 
 
-        public ProductController(ApplicationDbContext context)
+        public ProductCategorysController(ApplicationDbContext context)
         {
             _context = context;
 
         }
 
-        [HttpPost("create-product")]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        [HttpPost]
+        public async Task<ActionResult<ProductCategory>> CreateProductCategory(ProductCategory productCategory)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Products.Add(product);
+            _context.ProductCategory.Add(productCategory);
+
             await _context.SaveChangesAsync();
 
-            var res = await _context.Products.FindAsync(product.Id);
+            var res = await _context.ProductCategory.FindAsync(productCategory.Id);
 
             return res;
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> EditProduct(long id, Product product)
+        public async Task<ActionResult<ProductCategory>> EditProduct(long id, ProductCategory productCategory)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var productExists = await _context.Products.FindAsync(id);
+            var extisedProductCategory = await _context.ProductCategory.FindAsync(id);
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.ProductCategory.Update(   );
 
-            try
-            {
-                if (productExists == null)
-                {
-                    return NotFound();
-                }
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
-            }
+            await _context.SaveChangesAsync();
 
-            var res = await _context.Products.FindAsync(product.Id);
+            //if (extisedProductCategory == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //_context.Entry(productCategory).State = EntityState.Modified;
+
+            //try
+            //{
+            //    if (extisedProductCategory == null)
+            //    {
+            //        return NotFound();
+            //    }
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    throw;
+            //}
+
+            var res = await _context.Products.FindAsync(id);
 
             return Ok(res);
         }
@@ -116,19 +126,20 @@ namespace COFFEE_MANAGEMENT_API.Controllers
         //}
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetAllProduct()
+        public async Task<ActionResult<List<ProductCategory>>> GetAllProduct()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var product = await _context.Products.ToListAsync();
 
-            if (product == null)
+            var productCategorys = await _context.ProductCategory.ToListAsync();
+
+            if (productCategorys == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+            return Ok(productCategorys);
         }
     }
 }

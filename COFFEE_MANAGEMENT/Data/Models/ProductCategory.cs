@@ -10,6 +10,6 @@ namespace COFFEE_MANAGEMENT_API.Data.Models
     {
         public long Id { get; set; }
         [Required]
-        public long Name { get; set; }
+        public string Name { get; set; }
     }
 }
