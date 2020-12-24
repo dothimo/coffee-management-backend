@@ -17,105 +17,104 @@ namespace COFFEE_MANAGEMENT_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductController : ControllerBase
+    public class SalesDetailsControllers : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
 
-        public ProductController(ApplicationDbContext context)
+
+        public SalesDetailsControllers(ApplicationDbContext context)
         {
             _context = context;
 
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<SalesDetails>> CreateSalesDetails(SalesDetails salesDetails)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Products.Add(product);
+            _context.SalesDetailss.Add(salesDetails);
 
             await _context.SaveChangesAsync();
 
-            var res = await _context.Products.FindAsync(product.Id);
+            var res = await _context.SalesDetailss.FindAsync(salesDetails.Id);
 
             return res;
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> EditProduct(long id, Product product)
+        public async Task<ActionResult<SalesDetails>> EditProduct(long id, SalesDetails salesDetails)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var productExists = await _context.Products.FindAsync(id);
+            var extisedSalesDetails = await _context.SalesDetailss.FindAsync(id);
 
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
+            if (extisedSalesDetails == null)
             {
-                if (productExists == null)
-                {
-                    return NotFound();
-                }
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
+                return NotFound();
             }
 
-            var res = await _context.Products.FindAsync(product.Id);
+            extisedSalesDetails.BillId = salesDetails.BillId;
+
+            extisedSalesDetails.ProductId = salesDetails.ProductId;
+
+            var product = await _context.Products.FindAsync(salesDetails.ProductId);
+
+            _context.Update(extisedSalesDetails);
+
+            await _context.SaveChangesAsync();
+
+            var res = await _context.SalesDetailss.FindAsync(id);
 
             return Ok(res);
         }
 
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(long id)
+        public async Task<ActionResult<SalesDetails>> DeleteSalesDetails(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var extisedProduct = await _context.Products.FindAsync(id);
+            var extisedSalesDetails = await _context.SalesDetailss.FindAsync(id);
 
-            if (extisedProduct == null)
+            if (extisedSalesDetails == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(extisedProduct);
+            _context.SalesDetailss.Remove(extisedSalesDetails);
 
             await _context.SaveChangesAsync();
 
-            return extisedProduct;
+            return extisedSalesDetails;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductById(long id)
+        public async Task<ActionResult<SalesDetails>> GetSalesDetails(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var extisedProduct = await _context.Products.FindAsync(id);
+            var extisedSalesDetails = await _context.SalesDetailss.FindAsync(id);
 
-            if (extisedProduct == null)
+            if (extisedSalesDetails == null)
             {
                 return NotFound();
             }
 
-            return Ok(extisedProduct);
-
-
+            return Ok(extisedSalesDetails);
         }
     }
 }

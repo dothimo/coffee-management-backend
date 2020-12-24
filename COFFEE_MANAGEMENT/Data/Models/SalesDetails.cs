@@ -15,7 +15,7 @@ namespace COFFEE_MANAGEMENT_API.Data.Models
 
         public long ProductId { get; set; }
 
-        public long BillId { get; set; }
-
+        public long BillId { get;  set; }
+        public Decimal  TotalMoney { get; set; }
     }
 }

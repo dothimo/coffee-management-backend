@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,100 +18,116 @@ namespace COFFEE_MANAGEMENT_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductCategorysController : ControllerBase
+    public class CustomerController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
 
 
-        public ProductCategorysController(ApplicationDbContext context)
+        public CustomerController(ApplicationDbContext context)
         {
             _context = context;
 
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductCategory>> CreateProductCategory(ProductCategory productCategory)
+        public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.ProductCategory.Add(productCategory);
+            _context.Customers.Add(customer);
 
             await _context.SaveChangesAsync();
 
-            var res = await _context.ProductCategory.FindAsync(productCategory.Id);
+            var res = await _context.Customers.FindAsync(customer.Id);
 
             return res;
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProductCategory>> EditProduct(long id, ProductCategory productCategory)
+        public async Task<ActionResult<Customer>> EditCustomers(long id, Customer customer)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var extisedProductCategory = await _context.ProductCategory.FindAsync(id);
+            var extisedCustomers = await _context.Customers.FindAsync(id);
 
-            if (extisedProductCategory == null)
+            if (extisedCustomers == null)
             {
                 return NotFound();
             }
 
-            extisedProductCategory.Name = productCategory.Name;
+            extisedCustomers.Name = customer.Name;
 
-            _context.Update(extisedProductCategory);
+            _context.Update(extisedCustomers);
 
             await _context.SaveChangesAsync();
 
-            var res = await _context.ProductCategory.FindAsync(id);
+            var res = await _context.Customers.FindAsync(id);
 
             return Ok(res);
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ProductCategory>> DeleteProductCategory(long id)
+        public async Task<ActionResult<Customer>> DeleteCustomer(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var extisedProductCategory = await _context.ProductCategory.FindAsync(id);
+            var extisedCustomer = await _context.Customers.FindAsync(id);
 
-            if (extisedProductCategory == null)
+            if (extisedCustomer == null)
             {
                 return NotFound();
             }
 
-            _context.ProductCategory.Remove(extisedProductCategory);
+            _context.Customers.Remove(extisedCustomer);
 
             await _context.SaveChangesAsync();
 
-            return extisedProductCategory;
+            return extisedCustomer;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductCategory>> GetProductCategoryById(long id)
+        public async Task<ActionResult<Customer>> GetCustomerById(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var extisedProductCategory = await _context.ProductCategory.FindAsync(id);
+            var extisedCustomer = await _context.Customers.FindAsync(id);
 
-            if (extisedProductCategory == null)
+            if (extisedCustomer == null)
             {
                 return NotFound();
             }
 
-            return Ok(extisedProductCategory);
+            return Ok(extisedCustomer);
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult<List<Customer>>> GetAllCustomer()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var extisedCustomers = await _context.Customers.ToListAsync();
+
+            return Ok(extisedCustomers);
+        }
+
     }
 }
+

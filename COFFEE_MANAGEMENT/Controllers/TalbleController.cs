@@ -17,105 +17,100 @@ namespace COFFEE_MANAGEMENT_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductController : ControllerBase
+    public class TalbleController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
 
-        public ProductController(ApplicationDbContext context)
+
+        public TalbleController(ApplicationDbContext context)
         {
             _context = context;
 
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<Table>> CreateTable(Table table)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Products.Add(product);
+            _context.Tables.Add(table);
 
             await _context.SaveChangesAsync();
 
-            var res = await _context.Products.FindAsync(product.Id);
+            var res = await _context.Tables.FindAsync(table.Id);
 
             return res;
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> EditProduct(long id, Product product)
+        public async Task<ActionResult<Table>> EditTable(long id, ProductCategory productCategory)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var productExists = await _context.Products.FindAsync(id);
+            var extisedTable = await _context.Tables.FindAsync(id);
 
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
+            if (extisedTable == null)
             {
-                if (productExists == null)
-                {
-                    return NotFound();
-                }
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
+                return NotFound();
             }
 
-            var res = await _context.Products.FindAsync(product.Id);
+            extisedTable.Name = productCategory.Name;
+
+            _context.Update(extisedTable);
+
+            await _context.SaveChangesAsync();
+
+            var res = await _context.Tables.FindAsync(id);
 
             return Ok(res);
         }
 
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(long id)
+        public async Task<ActionResult<Table>> DeleteTable(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var extisedProduct = await _context.Products.FindAsync(id);
+            var extisedTable = await _context.Tables.FindAsync(id);
 
-            if (extisedProduct == null)
+            if (extisedTable == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(extisedProduct);
+            _context.Tables.Remove(extisedTable);
 
             await _context.SaveChangesAsync();
 
-            return extisedProduct;
+            return extisedTable;
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductById(long id)
+        public async Task<ActionResult<Table>> GetTableById(long id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var extisedProduct = await _context.Products.FindAsync(id);
+            var extisedTable = await _context.Tables.FindAsync(id);
 
-            if (extisedProduct == null)
+            if (extisedTable == null)
             {
                 return NotFound();
             }
 
-            return Ok(extisedProduct);
-
-
+            return Ok(extisedTable);
         }
     }
 }
